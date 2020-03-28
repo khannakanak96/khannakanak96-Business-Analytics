@@ -1,0 +1,78 @@
+[
+{
+"orgId": "100071",
+"orgName": "Martin County Public Schools",
+"orgShortName": "Martin County Public Schools",
+"orgTypeCd": 6,
+"orgSubTypeCd": "19",
+"streetAddr1": "500 East Ocean Boulevard",
+"city": "Stuart",
+"stateCd": "FL",
+"zip5": "34994",
+"zip4": "2572",
+"aiList": [
+{
+"code": "101196",
+"aiSourceCd": "CC",
+"aiInstTypeCd": "B"
+}
+],
+"testCenters": [],
+"aiGroupCode": null,
+"diGroupCode": null,
+"region": "SRO",
+"hierarchyParents": [
+{
+"hierarchyName": "MS",
+"parents": [
+100010
+]
+}
+],
+"address": "500 East Ocean Boulevard, Stuart, FL 34994"
+},
+{
+"orgId": "100140",
+"orgName": "Scott's Branch Middle High School",
+"orgShortName": "Scotts Branch High School",
+"orgTypeCd": 1,
+"orgSubTypeCd": "15",
+"streetAddr1": "9253 Alex Harvin Highway",
+"city": "Summerton",
+"stateCd": "SC",
+"zip5": "29148",
+"zip4": "8175",
+"aiList": [
+{
+"code": "411890",
+"aiSourceCd": "CC",
+"aiInstTypeCd": "A"
+}
+],
+"testCenters": [],
+"aiGroupCode": null,
+"diGroupCode": null,
+"region": "SRO",
+"hierarchyParents": [
+{
+"hierarchyName": "PORTL_STATE_LST",
+"parents": [
+104141
+]
+},
+{
+"hierarchyName": "STD_K12_ADMIN",
+"parents": [
+104549
+]
+},
+{
+"hierarchyName": "MS",
+"parents": [
+104549
+]
+}
+],
+"address": "9253 Alex Harvin Highway, Summerton, SC 29148"
+}
+]
