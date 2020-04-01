@@ -1,0 +1,119 @@
+---
+title: "Assignment 2 part 2"
+output: pdf_document
+---
+1. What can you say about the central tendency of the ratings?
+```{r}
+zagat <- read.csv("https://raw.githubusercontent.com/jcbonilla/BusinessAnalytics/master/BAData/zagat.CSV")
+summary(zagat)
+apply(zagat[,2:5],2,mean) # apply function helps to implement one function to all variables
+apply(zagat[,2:5],2,median)
+apply(zagat[,2:5],2,function(x)names(sort(table(x),decreasing = T))[1])
+```
+For centeral tendency you can also generate box plots and histograms
+```{r}
+par(mfrow=c(2,2)) # 4 figures arranged in 2 rows and 2 columns
+hist(zagat$Food,col="red")
+hist(zagat$Decor, col="blue")
+hist(zagat$Service,col="green")
+hist(zagat$Price,col ="yellow")
+```
+Boxplots
+```{r}
+par(mfrow=c(4,1)) # 4 figues arranged in 4 rows and 1 column
+boxplot(zagat$Food,horizontal = TRUE, col="red",xlab="Food")
+boxplot(zagat$Decor,horizontal = TRUE, col="blue",xlab="Decor")
+boxplot(zagat$Service,horizontal = TRUE, col="green",xlab="Service")
+boxplot(zagat$Price,horizontal = TRUE, col="yellow",xlab="Price")
+```
+
+From the plots above we can see that Food is rightly skewed and food mean = median < mode
+Decor is leftly skewed and mean = median > mode
+Service is rightly skewed and median = mode < mean
+Price is rightly skewed and mode< median< mean
+
+
+2. What can you say about the spread and dispersion of the ratings?
+```{r}
+apply(zagat[,2:5],2,range) 
+# The diff function computes the difference between pairs of consecutive elements of a numeric vector.
+diff(apply(zagat[,2:5],2,range) )
+#Quantiles
+apply(zagat[,2:5],2,quantile)
+#Interquartile
+apply(zagat[,2:5],2,quantile)[4,]-apply(zagat[,2:5],2,quantile)[2,]
+#Variance 
+apply(zagat[,2:5],2,var)
+#Standard Deviation
+apply(zagat[,2:5],2,sd)
+```
+
+In all of these measures it can be observed clearly that price is a highly dispersed variable. Which indicates that customer ratings differ a lot when it comes to price. 
+
+3. What are the correlations between rating dimensions?
+```{r}
+zagat_cor <- cor(zagat[,2:5])
+zagat_cor
+
+```
+To get a visualization of correlation you can also generate heatmaps and correlation matrix
+```{r}
+#install.packages("tidyr")
+library("tidyr")
+#install.packages("ggplot2")
+library("ggplot2")
+#install.packages("gplots")
+library("gplots")
+
+rnames <- zagat[,1]                            # assign labels in column 1 to "rnames"
+mat_data <- data.matrix(zagat[,2:ncol(zagat)])  # transform column 2-5 into a matrix
+rownames(mat_data) <- rnames 
+heatmap.2(mat_data, scale = "none", col = bluered(100), 
+          trace = "none", density.info = "none")
+
+library(corrplot)
+par(mfrow=c(1,1))
+corrplot(zagat_cor,type = "upper", order = "hclust", tl.col="black",tl.sort=90, addCoef.col = "white")
+
+
+```
+
+4. Using the information in 1-3, design a weighted average (index) that computes scores for each restaurant. Your index needs to reflect which ratings (decor vs food vs service vs price) you wish to amplify with loads/weights
+
+
+```{r}
+#standardizing the data
+#Z-score formula
+
+food_s <- (zagat$Food)/mean(zagat$Food)
+decor_s <- (zagat$Decor)/mean(zagat$Decor)
+service_s <- (zagat$Service)/mean(zagat$Service)
+price_s <- (zagat$Price)/mean(zagat$price)
+
+#sum of standard deviations
+sd_sum = sd(food_s) + sd(decor_s) + sd(service_s) + sd(price_s)
+
+#Calculating individual weights
+food_weight= (range(food_s)[2]-range(food_s)[1])*sd(food_s)/sd_sum
+decor_weight= (range(decor_s)[2]-range(decor_s)[1])*sd(decor_s)/sd_sum
+service_weight= (range(service_s)[2]-range(service_s)[1])*sd(service_s)/sd_sum
+price_weight= (range(price_s)[2]-range(price_s)[1])*sd(price_s)/sd_sum
+
+#Standardizing weights
+total_weight = food_weight+decor_weight+service_weight+price_weight
+
+food_w = food_weight/total_weight
+decor_w = decor_weight/total_weight
+service_w = service_weight/total_weight
+price_w = price_weight/total_weight
+
+food_w 
+decor_w 
+service_w 
+price_w 
+
+```
+Some Business Insights:
+
+1. From the evaluation above it can be seen that price is highly dispersed and would impact any business model the most.
+2. Price has least correaltion food hence I can say that improving the quality of food will help there business model. 
