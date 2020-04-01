@@ -1,0 +1,62 @@
+---
+title: "CitiBike Analysis"
+output: pdf_document
+---
+1. Compute summary statistics for tripduration
+```{r }
+citi <- read.csv("https://raw.githubusercontent.com/jcbonilla/BusinessAnalytics/master/BAData/JC-201709-citibike-tripdata.csv")
+summary(citi$tripduration)
+```
+
+2. Compute summary statistics for age
+
+```{r}
+citi$birth.year <- as.numeric(as.character(citi$birth.year))
+citi$age<- (2019 - citi$birth.year)
+summary(citi$age)
+```
+
+3. Compute summary statistics for tripduration in minutes (Need to transform
+tripduration from seconds to minutes)
+
+```{r}
+citi$citi_tripduration_mins <- citi$tripduration/60
+summary(citi$citi_tripduration_mins)
+
+```
+
+4. Compute the correlation between age and tripduration
+
+```{r}
+cor(citi$tripduration, citi$age, use = "complete.obs")
+```
+
+1. What is the total revenue assuming all users riding bikes from 0 to 45 minutes pay $3 per ride and user exceeding 45 minutes pay an additional $2 per ride.
+
+```{r}
+trip_1 <- sum(citi$citi_tripduration_mins < 45) *3
+trip_2 <- sum(citi$citi_tripduration_mins > 45) *5
+total_revenue <- trip_1 + trip_2
+total_revenue
+```
+Another method using table function in R
+```{r}
+revenue <- sum(table(citi$citi_trip>45)*c(3,5))
+revenue
+
+```
+
+2. Looking at tripduration in minutes, what can you say about the variance in the data.
+
+```{r}
+var(citi$citi_tripduration_mins)
+sd(citi$citi_tripduration_mins)
+boxplot(citi$citi_tripduration_mins) # High Variance can be observed in the box plot below
+```
+
+3. What does this mean for the pricing strategy?
+
+```{r}
+quantile(citi$citi_tripduration_mins,c(.98))
+```
+98% people drive citibike less that 45 mins hence if the company wants to increase profit they should increase proce below 45 mins or they can reduce this threshold to 40 mins.
